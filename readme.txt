@@ -1,9 +1,7 @@
-ÔËĞĞË³Ğò
+è¿è¡Œé¡ºåº
 1.getIndex.R
-Í¨¹ıgetIndex.RµÃµ½»ñÈ¡ĞĞÒµÖ¸±êµÄº¯Êı
+é€šè¿‡getIndex.Rå¾—åˆ°è·å–è¡Œä¸šæŒ‡æ ‡çš„å‡½æ•°
 2.industryGrowthTest.R
-µÃµ½¹¤ÒµÔö¼ÓÖµÊı¾İindgrowth
+å¾—åˆ°å·¥ä¸šå¢åŠ å€¼æ•°æ®indgrowth
 3.univariateModel.R
-
-Ö®ºóÔÚunivariateModel.RÀïÍê³ÉËùÓĞµÄ¼ìÑé£¬²¢ÔÚexcel±íÖĞ¼ÇÂ¼
-
+åœ¨univariateModel.Ré‡Œå®Œæˆæ‰€æœ‰çš„æ£€éªŒï¼Œå¹¶åœ¨excelè¡¨ä¸­è®°å½•
