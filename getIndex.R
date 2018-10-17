@@ -1,7 +1,7 @@
 setwd('E:/github/respository/GenialFlow')
 
 # 获取行业指标
-house <- read.csv('AshareIndustry/房地产净利润.csv', header = T)
+# house <- read.csv('AshareIndustry/房地产净利润.csv', header = T)
 ########################################
 # idxMedian函数
 # 功能：获取行业指标（中位数）
@@ -11,6 +11,7 @@ house <- read.csv('AshareIndustry/房地产净利润.csv', header = T)
 idxMedian <- function(df, time_start, time_end){
   num <- df[,4:ncol(df)]
   for(i in 1:ncol(num)) num[,i] <- as.numeric(num[,i])
+  num <- na.fill(num, 0)
   # 提取指标
   idx <- c()
   for(i in 1:ncol(num)){
@@ -43,7 +44,6 @@ getIndex <- function(filename){
 
 # 函数getIndex
 # 通过输入csv文件名一键获得时间序列数据
-aa <- getIndex('钢铁净利润.csv')
-
-
-
+aa <- getIndex('ROE/钢铁ROE.csv')
+diff(aa[,1])
+adf.test(a)

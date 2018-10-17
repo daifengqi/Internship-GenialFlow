@@ -22,4 +22,5 @@ adf.test(x)
 draw <- seq(from=3, to=length(x), by=3)
 
 # 获取最终的工业增加值数据
-growth <- (x[draw-2]*0.33+x[draw-1]*0.33+x[draw])*0.33
+indgrowth <- (x[draw-2]*0.33+x[draw-1]*0.33+x[draw])*0.33
+
