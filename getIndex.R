@@ -1,4 +1,4 @@
-setwd('E:/workspace_qdf/R')
+setwd('E:/github/respository/GenialFlow')
 
 # 获取行业指标
 house <- read.csv('AshareIndustry/房地产净利润.csv', header = T)
@@ -31,7 +31,19 @@ idxMedian <- function(df, time_start, time_end){
   return(rlt)
 }
 ########################################
-# 获取房地产数据
-idx_house <- idxMedian(df = house,
-                       time_start = "1993/3/1",
-                       time_end = "2017/12/1")
+
+getIndex <- function(filename){
+  path <- paste('AshareIndustry/', filename, sep = '')
+  profit <- read.csv(path, header = T)
+  idx <- idxMedian(df = profit,
+                   time_start = "1993/3/1",
+                   time_end = "2017/12/1")
+  return(idx)
+}
+
+# 函数getIndex
+# 通过输入csv文件名一键获得时间序列数据
+aa <- getIndex('钢铁净利润.csv')
+
+
+
