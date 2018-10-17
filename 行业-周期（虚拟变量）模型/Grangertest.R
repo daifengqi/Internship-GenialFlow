@@ -1,7 +1,7 @@
 setwd('D:\\R/GenialFlow')
 #setwd('E:\\workspace_qdf/R')
-library('lmtest') # ³ÌĞò°ü£ºÊ±¼äĞòÁĞ¼ìÑé
-library('tseries')#ÔØÈëtseries°ü
+library('lmtest') # ç¨‹åºåŒ…ï¼šæ—¶é—´åºåˆ—æ£€éªŒ
+library('tseries')#è½½å…¥tseriesåŒ…
 
 cycleRobust <- function(dfCycle, y, dif = FALSE){
   fit <- cbind(dfCycle, y[row.names(dfCycle),])
@@ -17,7 +17,7 @@ cycleRobust <- function(dfCycle, y, dif = FALSE){
 dat <- cycleRobust(gT1k0, idx_steel)
 dat <- dat[,c(3, 8)]
 ts <- dat[,2]
-adf.test(na.omit(ts)) # Æ½ÎÈĞÔ¼ìÑé
+adf.test(na.omit(ts)) # å¹³ç¨³æ€§æ£€éªŒ
 
 grangertest(dat$idx, dat$state, order = 1)
 grangertest(dat$state, dat$idx, order = 3)

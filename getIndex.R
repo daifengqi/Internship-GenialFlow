@@ -1,29 +1,26 @@
-setwd('D:\\R/GenialFlow')
-#setwd('E:\\workspace_qdf/R')
+setwd('E:/workspace_qdf/R')
 
-house <- read.csv('·¿µØ²ú¾»ÀûÈó.csv', header = T,
-                  stringsAsFactors = F)
-steel <- read.csv('¸ÖÌú¾»ÀûÈó.csv', header = T,
-                  stringsAsFactors = F)
+# èŽ·å–è¡Œä¸šæŒ‡æ ‡
+house <- read.csv('AshareIndustry/æˆ¿åœ°äº§å‡€åˆ©æ¶¦.csv', header = T)
 ########################################
-# idxMedianº¯Êý
-# ¹¦ÄÜ£º»ñÈ¡ÐÐÒµÖ¸±ê£¨ÖÐÎ»Êý£©
-# ÊäÈë£ºÐÐÒµÊý¾Ý¿ò£¨ÐÐ£ºËùÓÐÆóÒµ ÁÐ£º¿ªÊ¼Ê±¼ä-½áÊøÊ±¼ä ÔªËØ£ºÖ¸±êµÄÖµ£©
-# Êä³ö£ºÐÐÃû³ÆÎªÊ±¼äµã£¬Ò»ÁÐÔªËØÎªÖ¸±êÖÐÎ»ÊýµÄdataframe
+# idxMedianå‡½æ•°
+# åŠŸèƒ½ï¼šèŽ·å–è¡Œä¸šæŒ‡æ ‡ï¼ˆä¸­ä½æ•°ï¼‰
+# è¾“å…¥ï¼šè¡Œä¸šæ•°æ®æ¡†ï¼ˆè¡Œï¼šæ‰€æœ‰ä¼ä¸š åˆ—ï¼šå¼€å§‹æ—¶é—´-ç»“æŸæ—¶é—´ å…ƒç´ ï¼šæŒ‡æ ‡çš„å€¼ï¼‰
+# è¾“å‡ºï¼šè¡Œåç§°ä¸ºæ—¶é—´ç‚¹ï¼Œä¸€åˆ—å…ƒç´ ä¸ºæŒ‡æ ‡ä¸­ä½æ•°çš„dataframe
 ########################################
 idxMedian <- function(df, time_start, time_end){
   num <- df[,4:ncol(df)]
-  m <- as.matrix(num)
-  m[which(m==0)] <- NA
-  num <- as.data.frame(m)
   for(i in 1:ncol(num)) num[,i] <- as.numeric(num[,i])
-  # ÌáÈ¡Ö¸±ê
+  # æå–æŒ‡æ ‡
   idx <- c()
   for(i in 1:ncol(num)){
-    mid <- median(num[,i], na.rm = T)
+    m <- num[,i]
+    m[which(m==0)]<-NA
+    mid <- median(m, na.rm = T)
     idx <- c(idx, mid)
   }
   idx <- as.numeric(idx)
+  
   rlt <- as.data.frame(idx, 
                        row.names = 
                          as.character(
@@ -34,16 +31,7 @@ idxMedian <- function(df, time_start, time_end){
   return(rlt)
 }
 ########################################
-########################################
-
-# ÊÔÓÃ
+# èŽ·å–æˆ¿åœ°äº§æ•°æ®
 idx_house <- idxMedian(df = house,
                        time_start = "1993/3/1",
                        time_end = "2017/12/1")
-
-idx_steel <- idxMedian(df = steel,
-                       time_start = "1993/3/1",
-                       time_end = "2017/12/1")
-
-
-

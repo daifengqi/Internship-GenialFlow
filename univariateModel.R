@@ -1,96 +1,39 @@
-#setwd('E:/workspace_qdf/R')
-setwd('D:/R/GenialFlow')
+setwd('E:/workspace_qdf/R')
 
-# ¶ÁÈ¡ºê¹Û¾­¼ÃÊý¾Ý
-eco <- read.csv('economicData/economic_data.csv', header = T)
-eco <- eco[-1,]
-row.names(eco) <- 1:nrow(eco)
-eco <- eco[1:(nrow(eco)-4),] # Ñ¡Ôñ¿ªÊ¼Äê·Ý
-eco[,1] <- paste(eco[,1],'-01',sep='')
-eco[,1] <- as.Date(eco[,1])
-# »ñÈ¡¹¤ÒµÔö¼ÓÖµÔöËÙ(growth)
-growth <- as.numeric(levels(eco[,3])[eco[,3]])
-draw <- seq(from=3, to=nrow(eco),by=3)
-growth <- round((growth[draw-2]+growth[draw-1]+growth[draw])/3,4)
-growth <- as.data.frame(growth, row.names = 
-                          as.character(
-                            seq.Date(
-                              from = as.Date(eco[1,1]),
-                              to = as.Date(eco[nrow(eco),1]),
-                              by = 'quarter')))
+# è¯»å…¥æ•°æ®
+dat <- read.csv('univariate.csv')
+dat[,1] <- as.Date(as.character(dat[,1]))
+colnames(dat)[c(1,2)] <- c('time','index')
 
-# »ñÈ¡ÐÐÒµÖ¸±ê
-house <- read.csv('AshareIndustry/·¿µØ²ú¾»ÀûÈó.csv', header = T)
-########################################
-# idxMedianº¯Êý
-# ¹¦ÄÜ£º»ñÈ¡ÐÐÒµÖ¸±ê£¨ÖÐÎ»Êý£©
-# ÊäÈë£ºÐÐÒµÊý¾Ý¿ò£¨ÐÐ£ºËùÓÐÆóÒµ ÁÐ£º¿ªÊ¼Ê±¼ä-½áÊøÊ±¼ä ÔªËØ£ºÖ¸±êµÄÖµ£©
-# Êä³ö£ºÐÐÃû³ÆÎªÊ±¼äµã£¬Ò»ÁÐÔªËØÎªÖ¸±êÖÐÎ»ÊýµÄdataframe
-########################################
-idxMedian <- function(df, time_start, time_end){
-  num <- df[,4:ncol(df)]
-  for(i in 1:ncol(num)) num[,i] <- as.numeric(num[,i])
-  # ÌáÈ¡Ö¸±ê
-  idx <- c()
-  for(i in 1:ncol(num)){
-    m <- num[,i]
-    m[which(m==0)]<-NA
-    mid <- median(m, na.rm = T)
-    idx <- c(idx, mid)
-  }
-  idx <- as.numeric(idx)
-  
-  rlt <- as.data.frame(idx, 
-                       row.names = 
-                         as.character(
-                           seq.Date(
-                             from = as.Date(time_start),
-                             to = as.Date(time_end),
-                             by = 'quarter')))
-  return(rlt)
-}
-########################################
-# »ñÈ¡·¿µØ²úÊý¾Ý
-idx_house <- idxMedian(df = house,
-                       time_start = "1993/3/1",
-                       time_end = "2017/12/1")
 
-# ÕûºÏµ½Ò»¸öÊý¾Ý¿ò
-fit <- cbind(idx_house, growth[13:(nrow(growth)-2),])
-colnames(fit) <- c('index', 'growth')
-fit <- na.omit(fit)
-
-# ±ê×¼»¯&¶ÔÊý´¦Àí
-fit <- as.data.frame(apply(fit, 2, scale))
-center <- sweep(fit, 2, apply(fit, 2, min),'-') #ÔÚÁÐµÄ·½ÏòÉÏ¼õÈ¥×îÐ¡Öµ
-R <- apply(fit, 2, max) - apply(fit,2,min) #Ëã³ö¼«²î£¬¼´ÁÐÉÏµÄ×î´óÖµ-×îÐ¡Öµ
-fit_star<- sweep(center, 2, R, "/") + 1 #°Ñ¼õÈ¥¾ùÖµºóµÄ¾ØÕóÔÚÁÐµÄ·½ÏòÉÏ³ýÒÔ¼«²îÏòÁ¿
-lnfit <- as.data.frame(apply(fit_star, 2, log)) # È¡¶ÔÊý
-
-# ×îºó£¬ÎÒÃÇµÃµ½×îÖÕ´úÈëÄ£ÐÍµÄÊý¾Ý¿ò:lnfit
-
-# Step1 :Æ½ÎÈÐÔ¼ìÑé
-library('tseries') #ÔØÈëtseries°ü
-index <- lnfit[,1]
-growth <- lnfit[,2]
-plot.ts(growth)
-adf.test(index)
-adf.test(growth) # ¹¤ÒµÔö¼ÓÖµÏÔÈ»²»»áÆ½ÎÈ
-
-# Step2:»Ø¹é·ÖÎö-Ïà¹Ø¹ØÏµ-³¤ÆÚ¾ùºâ¹ØÏµ
-m1 <- lm(index~growth, data = lnfit)
+# é•¿æœŸå‡è¡¡å…³ç³»
+m1 <- lm(index~growth, data = dat)
 summary(m1)
-# Í¬½×µ¥Õû£ºËæ»úÎó²îÏîÊÇÆ½ÎÈÐòÁÐ
-adf.test(m1$residuals) # ÔÚ10%µÄÏÔÖøË®Æ½ÏÂÍ¨¹ý
+# å¯¹å‚å·®è¿›è¡Œå¹³ç¨³æ€§æ£€éªŒ
+err <- m1$residuals
+adf.test(err) 
+# é€šè¿‡æ£€éªŒï¼Œæ•…ä¼ ç»Ÿå›žå½’çš„ç»“è®ºå¯ä»¥ä½¿ç”¨
+plot(err, type = 'l')
 
-# ÊÇ·ñÐ­Õû£¿
-
-# Step3:¸ñÀ¼½ÜÒò¹û¹ØÏµ¼ìÑé
+# æ ¼å…°æ°å› æžœå…³ç³»æ£€éªŒ
 library('lmtest')
+index <- dat[,2]
+growth <- dat[,3]
 grangertest(index~growth, order = 1)
 grangertest(growth~index, order = 1)
 
+# var(å‘é‡è‡ªå›žå½’)
+library('vars')
+VARselect(index, lag.max=8,type="const")["selection"]
+# Result :ä¸€é˜¶å°±è¡Œ
+# æ‹Ÿåˆvaræ¨¡åž‹
+var1 <- VAR(dat[,c(2,3)], p=1, type = 'const') 
+# ç³»ç»Ÿå¹³ç¨³æ€§
+var1_stabil <- stability(var1, type = 'OLS-MOSUM',
+          h = 0.15, dynamic = FALSE,
+          rescale = TRUE)
+plot(var1_stabil) # æ¨¡åž‹é€šè¿‡äº†å¹³ç¨³æ€§æ£€éªŒ
 
-dwtest(m1)
+
 
 

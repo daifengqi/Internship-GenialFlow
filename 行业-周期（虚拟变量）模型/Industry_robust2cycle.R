@@ -9,10 +9,10 @@ cycleRobust <- function(dfCycle, y, dif = FALSE){
     m1 <- lm(idx[2:nrow(fit)]~state[1:(nrow(fit)-1)], data = fit)
   }
   m1 <- lm(idx~state, data = fit)
-  summary(m1) # 函数没有返回，作用是查看回归结果
+  summary(m1) # 鍑芥暟娌℃湁杩斿洖锛屼綔鐢ㄦ槸鏌ョ湅鍥炲綊缁撴灉
 }
 
-# 试用
+# 璇曠敤
 cycleRobust(dfCycle = gT1k0,
             y = idx_house)
 

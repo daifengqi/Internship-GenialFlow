@@ -1,39 +1,40 @@
-# ¶ÁÈëÊı¾İ
-dat <- read.csv('indGrowth.csv', header = T, stringsAsFactors = F)
+# è¯»å…¥æ•°æ®
+setwd('E:/workspace_qdf/R')
+dat <- read.csv('economicData/indGrowth.csv', header = T, stringsAsFactors = F)
 
-# Æ½ÎÈĞÔ¼ìÑé
-library('tseries') #ÔØÈëtseries°ü
+# å¹³ç¨³æ€§æ£€éªŒ
+library('tseries') #è½½å…¥tseriesåŒ…
 ind_growth <- dat[,2]
 time <- dat[,1][2:nrow(dat)]
 ind_dif <- diff(ind_growth)
 
 dat[,1] <- as.Date(dat[,1])
 
-#############################################(¿ÉÌø¹ı)
-# Ô­Ê¼Êı¾İ
-plot(ind_growth~dat[,1])     # ×÷Í¼
-adf.test(ind_growth)         # ADF¼ìÑé
-# »ñÈ¡¶ÔÊı&²î·ÖÊı¾İ
+#############################################(å¯è·³è¿‡)
+# åŸå§‹æ•°æ®
+plot(ind_growth~dat[,1])     # ä½œå›¾
+adf.test(ind_growth)         # ADFæ£€éªŒ
+# è·å–å¯¹æ•°&å·®åˆ†æ•°æ®
 ind_ln <- log(ind_growth)
 ind_dif <- diff(ind_growth)
-# ²î·Ö
-plot(ind_dif~dat[,1][2:nrow(dat)]) # ×÷Í¼
-adf.test(ind_dif)                  # ADF¼ìÑé
-# ¶ÔÊı
-plot(ind_ln~dat[,1])  # ×÷Í¼
-adf.test(ind_ln)      # ADF¼ìÑé
+# å·®åˆ†
+plot(ind_dif~dat[,1][2:nrow(dat)]) # ä½œå›¾
+adf.test(ind_dif)                  # ADFæ£€éªŒ
+# å¯¹æ•°
+plot(ind_ln~dat[,1])  # ä½œå›¾
+adf.test(ind_ln)      # ADFæ£€éªŒ
 
-# ¶ÔÊıÔÙ²î·Ö
+# å¯¹æ•°å†å·®åˆ†
 lnind_dif <- diff(ind_ln)
 plot(ind_ln, type='l')
 
 #par(mfrow=c(2,1))############################
 df <- as.data.frame(cbind(time, lnind_dif),
-                     stringsAsFactors = F)
+                    stringsAsFactors = F)
 df[,2] <- as.numeric(df[,2])
 
 
-# È¡93-17ÄêµÄÊı¾İ
+# å–93-17å¹´çš„æ•°æ®
 x <- df[36:335, 2]
 adf.test(x)
 plot(x, type = 'l')
@@ -42,20 +43,17 @@ growth <- (x[draw-2]*0.33+x[draw-1]*0.33+x[draw])*0.33
 adf.test(growth)
 plot(growth, type = 'l')
 
-# ºÏ²¢
+# åˆå¹¶
 fit <- cbind(idx_house, growth)
 #fit <- na.omit(fit)
 adf.test(fit[,1])
 adf.test(fit[,2])
 
-# ±ê×¼»¯&¶ÔÊı´¦Àí
-fit <- as.data.frame(apply(fit, 2, scale))
-center <- sweep(fit, 2, apply(fit, 2, min),'-') #ÔÚÁĞµÄ·½ÏòÉÏ¼õÈ¥×îĞ¡Öµ
-R <- apply(fit, 2, max) - apply(fit,2,min) #Ëã³ö¼«²î£¬¼´ÁĞÉÏµÄ×î´óÖµ-×îĞ¡Öµ
-fit_star<- sweep(center, 2, R, "/") + 1 #°Ñ¼õÈ¥¾ùÖµºóµÄ¾ØÕóÔÚÁĞµÄ·½ÏòÉÏ³ıÒÔ¼«²îÏòÁ¿
-lnfit <- as.data.frame(apply(fit_star, 2, log)) # È¡¶ÔÊı
+# å¯¹NAè¿›è¡Œæ’è¡¥
+fit[1,1] <- fit[2,1]
+na <- which(is.na(fit[,1]))
+fit[,1][na] <- (fit[,1][na+1]+fit[,1][na-1])/2 # ä¸Šä¸‹å¹³å‡å€¼æ’è¡¥NA
 
-# ¼ìÑé
-adf.test(lnfit[,1])
-adf.test(lnfit[,2])
-plot(lnfit[,2])
+# ç°åœ¨éƒ½èƒ½é€šè¿‡å¹³ç¨³æ€§æ£€éªŒ
+write.csv(fit, 'univariate.csv', row.names = T)
+

@@ -1,13 +1,13 @@
-#setwd('E:/workspace_qdf/R')
-setwd('D:/R/GenialFlow')
+setwd('E:/workspace_qdf/R')
+#setwd('D:/R/GenialFlow')
 
 
-# ∂¡»°π§“µ‘ˆº”÷µπ¿º∆÷µ
-rlind <- read.csv('industryGrowth94-13.csv', header = F,
+# ËØªÂèñÂ∑•‰∏öÂ¢ûÂä†ÂÄº‰º∞ËÆ°ÂÄº
+rlind <- read.csv('economicData/industryGrowth94-13.csv', header = F,
                   stringsAsFactors = F)
 rlind[,1] <- as.Date(rlind[,1])
 
-# ∂¡»°π§“µ‘ˆº”÷µ‘ˆÀŸ
+# ËØªÂèñÂ∑•‰∏öÂ¢ûÂä†ÂÄºÂ¢ûÈÄü
 eco <- read.csv('economicData/economic_data.csv', header = T,
                 stringsAsFactors = F)
 eco <- eco[-1,]
@@ -15,31 +15,31 @@ eco[,1] <- paste(eco[,1],'-01',sep='')
 eco[,1] <- as.Date(eco[,1])
 eco_ind <- eco[,c(1,3)]
 
-# ∫œ≤¢‘ˆÀŸ”Î‘ˆ÷µπ¿º∆÷µ
+# ÂêàÂπ∂Â¢ûÈÄü‰∏éÂ¢ûÂÄº‰º∞ËÆ°ÂÄº
 colnames(eco_ind)[1] <- 'V1'
 
 
-# ºÏ—È£®“—Õ®π˝£¨ø…Ã¯π˝¥À≤ø∑÷£©
+# Ê£ÄÈ™åÔºàÂ∑≤ÈÄöËøáÔºåÂèØË∑≥ËøáÊ≠§ÈÉ®ÂàÜÔºâ
 # ##############################
 dat <- merge(rlind, eco_ind, by='V1',
-             all = F) # œ»∫œ≤¢“—”– ˝æ›”√”⁄ºÏ—È
+             all = F) # ÂÖàÂêàÂπ∂Â∑≤ÊúâÊï∞ÊçÆÁî®‰∫éÊ£ÄÈ™å
 colnames(dat) <- c('time', 'growth', 'growth_speed')
 time <- dat[,1]
 growth <- dat[,2]
 growth_speed <- dat[,3]
 speed_real <- growth[13:length(growth)]/growth[1:(length(growth)-12)]
 speed_real <- (speed_real -1)*100
-# ◊˜ÕººÏ—Èπ¿º∆÷µµƒ◊º»∑–‘
+# ‰ΩúÂõæÊ£ÄÈ™å‰º∞ËÆ°ÂÄºÁöÑÂáÜÁ°ÆÊÄß
 plot(speed_real~time[13:length(time)], type='l', col = 'red')
 lines(growth_speed[13:length(growth_speed)]~time[13:length(time)], type='l', col = 'blue')
-# ª˘±æ÷ÿ∫œ£¨ π ø…“‘ π”√
+# Âü∫Êú¨ÈáçÂêàÔºå ÊïÖÂèØ‰ª•‰ΩøÁî®
 # ##############################
 
 
 dat <- merge(rlind, eco_ind, by='V1',
-             all = T) #  π”√»´≤ø ˝æ›
+             all = T) # ‰ΩøÁî®ÂÖ®ÈÉ®Êï∞ÊçÆ
 dat <- dat[-c(nrow(dat), nrow(dat)-1),]
-# ÃÓ≥‰ ˝æ›
+# Â°´ÂÖÖÊï∞ÊçÆ
 for(i in 4:1){
   r1 <- 12*i+1
   r2 <- 12*(i+1)
