@@ -1,4 +1,5 @@
 setwd('E:/github/respository/GenialFlow')
+library('zoo') # 程序包：数据预处理
 
 # 获取行业指标
 # house <- read.csv('AshareIndustry/房地产净利润.csv', header = T)
@@ -10,8 +11,11 @@ setwd('E:/github/respository/GenialFlow')
 ########################################
 idxMedian <- function(df, time_start, time_end){
   num <- df[,4:ncol(df)]
+  num <- na.fill(num, 0)           # 填充原始缺失
+  num <- gsub(',','',num)
+  num <- apply(num, 2, as.numeric)
+  num <- na.fill(num, 0)           # 填充由于数据转换造成的缺失
   for(i in 1:ncol(num)) num[,i] <- as.numeric(num[,i])
-  num <- na.fill(num, 0)
   # 提取指标
   idx <- c()
   for(i in 1:ncol(num)){
@@ -35,7 +39,7 @@ idxMedian <- function(df, time_start, time_end){
 
 getIndex <- function(filename){
   path <- paste('AshareIndustry/', filename, sep = '')
-  profit <- read.csv(path, header = T)
+  profit <- read.csv(path, header = T, stringsAsFactors = F)
   idx <- idxMedian(df = profit,
                    time_start = "1993/3/1",
                    time_end = "2017/12/1")
@@ -44,6 +48,7 @@ getIndex <- function(filename){
 
 # 函数getIndex
 # 通过输入csv文件名一键获得时间序列数据
-aa <- getIndex('ROE/钢铁ROE.csv')
-diff(aa[,1])
-adf.test(a)
+remove(pl)
+pl <- getIndex('净利润/化工净利润.csv')
+ts.plot(pl[,1]) # 查看时间序列图
+
