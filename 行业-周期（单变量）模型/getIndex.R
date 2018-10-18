@@ -10,9 +10,12 @@ library('zoo') # 程序包：数据预处理
 idxMedian <- function(df, time_start, time_end){
   num <- df[,4:ncol(df)]
   num <- na.fill(num, 0)           # 填充原始缺失
+  finance_data = T
+  if(finance_data){
   num <- gsub(',','',num)
   num <- apply(num, 2, as.numeric)
   num <- na.fill(num, 0)           # 填充由于数据转换造成的缺失
+  }
   for(i in 1:ncol(num)) num[,i] <- as.numeric(num[,i])
   # 提取指标
   idx <- c()

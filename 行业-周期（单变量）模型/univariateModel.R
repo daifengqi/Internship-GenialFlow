@@ -26,7 +26,7 @@ uniModel <- function(filename, indgrowth){
   colnames(fit) <- c('index', 'growth')
   return(fit)
 }
-dff <- uniModel('主营业务利润/有色金属主营业务利润.csv', indgrowth)
+dff <- uniModel('主营业务利润/综合主营业务利润.csv', indgrowth)
 # 对指标标准化
 df <- as.data.frame(apply(dff, 2, scale))
 # 长期均衡关系
