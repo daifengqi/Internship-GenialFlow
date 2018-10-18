@@ -15,12 +15,18 @@ uniModel <- function(filename, indgrowth){
   if(is.na(fit[1,1])) fit[1,1] <- fit[2,1]
   na <- which(is.na(fit[,1]))
   fit[,1][na] <- (fit[,1][na+1]+fit[,1][na-1])/2 # 上下平均值插补NA
+  dif = F # 是否对指标数据进行处理
+  if(dif){
+    fit[,1] <- log(fit[,1]-min(fit[,1])+1)
+    fit[,1] <- c(0, diff(fit[,1]))
+    fit <- fit[3:nrow(fit),]
+  }
   print('行业指标的平稳性检验结果:')
   print(adf.test(fit[,1]))
   colnames(fit) <- c('index', 'growth')
   return(fit)
 }
-dff <- uniModel('净利润/综合净利润.csv', indgrowth)
+dff <- uniModel('主营业务利润/有色金属主营业务利润.csv', indgrowth)
 # 对指标标准化
 df <- as.data.frame(apply(dff, 2, scale))
 # 长期均衡关系
@@ -36,4 +42,5 @@ index <- df[,1]
 growth <- df[,2]
 grangertest(growth~index, order = k)
 grangertest(index~growth, order = k)
+
 

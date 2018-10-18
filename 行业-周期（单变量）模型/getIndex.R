@@ -1,13 +1,11 @@
 setwd('E:/github/respository/GenialFlow')
 library('zoo') # 程序包：数据预处理
 
-# 获取行业指标
+# 获取行业数据
 # house <- read.csv('AshareIndustry/房地产净利润.csv', header = T)
 ########################################
 # idxMedian函数
 # 功能：获取行业指标（中位数）
-# 输入：行业数据框（行：所有企业 列：开始时间-结束时间 元素：指标的值）
-# 输出：行名称为时间点，一列元素为指标中位数的dataframe
 ########################################
 idxMedian <- function(df, time_start, time_end){
   num <- df[,4:ncol(df)]
@@ -48,7 +46,7 @@ getIndex <- function(filename){
 
 # 函数getIndex
 # 通过输入csv文件名一键获得时间序列数据
-remove(pl)
-pl <- getIndex('净利润/化工净利润.csv')
+# remove(pl)
+pl <- getIndex('主营业务利润/化工主营业务利润.csv')
 ts.plot(pl[,1]) # 查看时间序列图
 
