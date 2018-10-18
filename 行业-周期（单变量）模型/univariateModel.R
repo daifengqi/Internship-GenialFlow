@@ -2,13 +2,10 @@ setwd('E:/github/respository/GenialFlow')
 library('vars')   # 程序包：向量自回归
 library('lmtest') # 程序包： 时间序列检验
 
-# 读入数据
-# dat <- read.csv('univariate.csv')
-# dat[,1] <- as.Date(as.character(dat[,1]))
-# colnames(dat)[c(1,2)] <- c('time','index')
+# README!
+# 工业增加值(indgrowth)在industryGrowthTest.R里得到;
+# idx通过getIndex.R里的函数得到;
 
-# 工业增加值(growth)在industryGrowthTest.R里得到
-# idx通过getIndex.R里的函数得到
 # 这个R文件从cbind()上述两列数据开始
 uniModel <- function(filename, indgrowth){
   idx <- getIndex(filename)
@@ -39,7 +36,4 @@ index <- df[,1]
 growth <- df[,2]
 grangertest(growth~index, order = k)
 grangertest(index~growth, order = k)
-
-
-
 
