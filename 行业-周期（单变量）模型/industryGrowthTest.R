@@ -1,8 +1,9 @@
 # 读入数据
-setwd('E:/github/respository/GenialFlow')
+setwd('E:/workspace_qdf/R')
 library('tseries') #程序包：时间序列
 
-dat <- read.csv('economicData/indGrowth.csv', header = T, stringsAsFactors = F)
+dat <- read.csv('economicData/indGrowth.csv', header = T, 
+                stringsAsFactors = F)
 # 平稳性检验
 ind_growth <- dat[,2]
 time <- dat[,1][2:nrow(dat)]

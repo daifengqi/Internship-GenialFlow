@@ -1,8 +1,8 @@
-setwd('E:/github/respository/GenialFlow')
+setwd('E:/workspace_qdf/R')
 library('zoo') # 程序包：数据预处理
 
 # 获取行业数据
-# house <- read.csv('AshareIndustry/房地产净利润.csv', header = T)
+# house <- read.csv('AshareIndustry/净利润/房地产净利润.csv', header = T)
 ########################################
 # idxMedian函数
 # 功能：获取行业指标（中位数）
@@ -10,7 +10,7 @@ library('zoo') # 程序包：数据预处理
 idxMedian <- function(df, time_start, time_end){
   num <- df[,4:ncol(df)]
   num <- na.fill(num, 0)           # 填充原始缺失
-  finance_data = T
+  finance_data = T                 # 指标是否为财务数据，若是，去除","
   if(finance_data){
   num <- gsub(',','',num)
   num <- apply(num, 2, as.numeric)

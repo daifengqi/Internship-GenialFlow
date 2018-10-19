@@ -1,4 +1,4 @@
-setwd('E:/github/respository/GenialFlow')
+setwd('E:/workspace_qdf/R')
 library('vars')   # 程序包：向量自回归
 library('lmtest') # 程序包：时间序列检验
 
@@ -11,24 +11,24 @@ uniModel <- function(filename, indgrowth){
   idx <- getIndex(filename)
   fit <- cbind(idx, indgrowth)
   # 对NA进行插补）
-  fit <- fit[5:nrow(fit),] # 弃掉NA出现概率较高的前几年
+  fit <- fit[10:nrow(fit),] # 弃掉NA出现概率较高的前几年
   if(is.na(fit[1,1])) fit[1,1] <- fit[2,1]
   na <- which(is.na(fit[,1]))
   fit[,1][na] <- (fit[,1][na+1]+fit[,1][na-1])/2 # 上下平均值插补NA
-  dif = F # 是否对指标数据进行处理
+  dif = F # 是否对行业指标数据变换
   if(dif){
     fit[,1] <- log(fit[,1]-min(fit[,1])+1)
     fit[,1] <- c(0, diff(fit[,1]))
     fit <- fit[3:nrow(fit),]
   }
-  print('行业指标的平稳性检验结果:')
-  print(adf.test(fit[,1]))
   colnames(fit) <- c('index', 'growth')
   return(fit)
 }
 dff <- uniModel('主营业务利润/综合主营业务利润.csv', indgrowth)
 # 对指标标准化
 df <- as.data.frame(apply(dff, 2, scale))
+# 指标的平稳性检验
+adf.test(df[,1])
 # 长期均衡关系
 m1 <- lm(index~growth, data = df)
 summary(m1)
