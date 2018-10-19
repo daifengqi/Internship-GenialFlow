@@ -10,8 +10,9 @@ library('lmtest') # 程序包：时间序列检验
 uniModel <- function(filename, indgrowth){
   idx <- getIndex(filename)
   fit <- cbind(idx, indgrowth)
-  # 对NA进行插补）
-  fit <- fit[10:nrow(fit),] # 弃掉NA出现概率较高的前几年
+  # 对NA进行插补
+  startrow <- 3
+  fit <- fit[startrow:nrow(fit),] # 弃掉NA出现概率较高的前几年
   if(is.na(fit[1,1])) fit[1,1] <- fit[2,1]
   na <- which(is.na(fit[,1]))
   fit[,1][na] <- (fit[,1][na+1]+fit[,1][na-1])/2 # 上下平均值插补NA
