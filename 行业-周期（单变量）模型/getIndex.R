@@ -35,7 +35,8 @@ idxMedian <- function(df, time_start, time_end, finance_data){
                              by = 'quarter')))
   # 默认是从1993年第一季度开始，需要调整开始时间请修改
   # 比如若从1997年开始，请输入n=(1997-1993)*4+1=17
-  n <- 17
+  idxYear <- 1997
+  n <- (idxYear-1993)*4+1
   rlt <- as.data.frame(rlt[n:nrow(rlt),])
   colnames(rlt)[1] <- 'idx'
   return(rlt)
@@ -55,8 +56,10 @@ getIndex <- function(filename, finance_data){
 # 函数getIndex
 # 通过输入csv文件名一键获得时间序列数据
 # remove(pl)
-cw <- getIndex('净利润/化工净利润.csv', finance_data = T)
-notcw <- getIndex('ROE/化工ROE.csv', finance_data = F)
+plot1 <- getIndex('ROE/房地产ROE.csv', finance_data = F)
+plot2 <- getIndex('主营业务利润/机械设备主营业务利润.csv', finance_data = T)
 
-ts.plot(pl[,1]) # 查看时间序列图
-
+ts.plot(plot1, type='o', col = 'red')    # 查看净利润
+lines(scale(plot2), type='o', col = 'blue')  # 查看主营业务利润
+legend('topleft', c('净利润', 'ROE'), col = c('red', 'blue'),
+       lty = 1)
