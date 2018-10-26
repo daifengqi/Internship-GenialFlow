@@ -17,9 +17,13 @@ idxMedian <- function(df, time_start, time_end, finance_data){
   num <- na.fill(num, 0)           # 填充由于数据转换造成的缺失
   }
   num <- apply(num, 2, as.numeric)
-  
-  
-  
+  # 这个地方开始写，对于累计数据和每期数据的处理。
+  accumulated = T
+  if(accumulated){}
+  #
+  #
+  #
+  #
   # 提取指标
   idx <- c()
   for(i in 1:ncol(num)){
