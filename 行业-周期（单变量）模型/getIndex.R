@@ -63,10 +63,10 @@ getIndex <- function(filename, finance_data){
 # 函数getIndex
 # 通过输入csv文件名一键获得时间序列数据
 # remove(pl)
-plot1 <- getIndex('ROE/房地产ROE.csv', finance_data = F)
-plot2 <- getIndex('主营业务利润/机械设备主营业务利润.csv', finance_data = T)
+plot1 <- getIndex('ROE/采掘ROE.csv', finance_data = F)
+plot2 <- getIndex('主营业务利润/采掘主营业务利润.csv', finance_data = T)
 
-ts.plot(plot1, type='o', col = 'red')        # 查看净利润
+ts.plot(scale(plot1), type='o', col = 'red')        # 查看净利润
 lines(scale(plot2), type='o', col = 'blue')  # 查看主营业务利润
 legend('topleft', c('净利润', 'ROE'), col = c('red', 'blue'),
        lty = 1)
