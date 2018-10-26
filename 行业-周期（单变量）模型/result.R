@@ -54,7 +54,7 @@ return(final_rlt)
 }
 
 # 注意参数调整
-# 1. 如果指标为财务数据(数字有",")，请在getIndex.R中修改finance_data = T；
+# 1. 如果指标为财务数据(数字间有",")，请在getIndex.R中修改finance_data = T；
 # 2. 如果报错NAs in x，请尝试调大univariateModel.R中startrow的值，
 #    若超过10之后依然报错，请自行检查。
 # 3. 如果报错Error in apply(num, 2, as.numeric) : 

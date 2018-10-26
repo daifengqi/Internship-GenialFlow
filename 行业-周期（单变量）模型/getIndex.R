@@ -9,7 +9,7 @@ library('zoo') # 程序包：数据预处理
 ########################################
 idxMedian <- function(df, time_start, time_end, finance_data){
   num <- df[,4:ncol(df)]
-  num <- na.fill(num, 0)           # 填充由于数据转换造成的缺失
+  num <- na.fill(num, 0)
   finance_data = finance_data      # 指标是否为财务数据，若是则为 T
   if(finance_data){
   num <- gsub(',','',num)
@@ -17,6 +17,9 @@ idxMedian <- function(df, time_start, time_end, finance_data){
   num <- na.fill(num, 0)           # 填充由于数据转换造成的缺失
   }
   num <- apply(num, 2, as.numeric)
+  
+  
+  
   # 提取指标
   idx <- c()
   for(i in 1:ncol(num)){
@@ -34,7 +37,7 @@ idxMedian <- function(df, time_start, time_end, finance_data){
                              to = as.Date(time_end),
                              by = 'quarter')))
   # 默认是从1993年第一季度开始，需要调整开始时间请修改
-  # 比如若从1997年开始，请输入n=(1997-1993)*4+1=17
+  # 比如若从1997年开始，请输入idxYear = 1997
   idxYear <- 1997
   n <- (idxYear-1993)*4+1
   rlt <- as.data.frame(rlt[n:nrow(rlt),])
@@ -59,7 +62,7 @@ getIndex <- function(filename, finance_data){
 plot1 <- getIndex('ROE/房地产ROE.csv', finance_data = F)
 plot2 <- getIndex('主营业务利润/机械设备主营业务利润.csv', finance_data = T)
 
-ts.plot(plot1, type='o', col = 'red')    # 查看净利润
+ts.plot(plot1, type='o', col = 'red')        # 查看净利润
 lines(scale(plot2), type='o', col = 'blue')  # 查看主营业务利润
 legend('topleft', c('净利润', 'ROE'), col = c('red', 'blue'),
        lty = 1)
