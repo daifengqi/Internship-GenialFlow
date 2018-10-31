@@ -25,7 +25,7 @@ uniModel <- function(filename, economiccycle, finance_data){
   colnames(fit) <- c('index', 'economic_cycle')
   return(fit)
 }
-dff <- uniModel('净利润/银行净利润.csv', ppidata)
+dff <- uniModel('净利润/银行净利润.csv', ppidata, finance_data = T)
 # 对指标标准化
 df <- as.data.frame(apply(dff, 2, scale))
 # 查看两变量的走势图
