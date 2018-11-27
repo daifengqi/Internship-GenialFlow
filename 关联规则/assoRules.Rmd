@@ -1,0 +1,112 @@
+---
+title: "Association Rules"
+author: "Cesc"
+date: '11.24'
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## 准备工作
+```{r,echo = TRUE, warnings=FALSE, message=FALSE, prompt=FALSE, comment=NA}
+setwd('D://R')        # 默认路径
+library(arules)       # 程序包：关联规则
+library(arulesViz)    # 程序包：规则可视化
+library(RColorBrewer) # 程序包：调色盘
+```
+
+
+## 读取数据集
+```{r}
+groceries <- read.transactions("groceries.csv", format="basket", sep=",")
+gro <- read.csv('groceries.csv', header = F)
+head(gro) # 查看数据的储存格式
+```
+
+
+数据的储存格式可以如上所示，每一行表示一次观测（比如看一期财报），内容是修改过的items（比如营业收入等）。在txt中，每一项item用逗号隔开；在Excel中，每一项item占一列。此外，记载的顺序不作要求，每一次观测到的item个数不作要求。
+
+
+## 数据探查
+```{r}
+itemFrequencyPlot(groceries, support=0.1)
+```
+
+
+该柱状图展示了每一项出现的频次，也可以理解为概率。例如，如果观察了100期财报，其中营业收入修改过的有36次，则item frequency（频次）为36%。
+
+
+## 模型建立
+```{r, results='hide'}
+# 代入关联规则模型
+groceryrules <- apriori(groceries, parameter = list(support = 0.006, confidence = 0.25, minlen = 2))
+```
+
+```{r}
+# 查看结果
+ordered_groceryrules <- sort(groceryrules, by="lift") # 按照提升度排序
+inspect(ordered_groceryrules[1:5])                    # 报告提升度前5的规则
+```
+
+
+lhs理解为关联规则的“因”，rhs理解为“果”，属于此两列的内容是项目名称(item)。support表示前两列同时出现的频率，confidence表示有“因”在的前提下，“果”出现的频率。lift的计算较为复杂，通俗地讲，该指标直接刻画了项目的因果关系，是最重要的指标，该指标的值越大，表明前两列的关联关系越深。count表明前两列所有的项目同时出现的次数（计数指标）。
+
+
+用第一行举例，herbs和root vegetables是两个项目的名称，可以类比为财报中的两项指标。count=69，support=0.007表面了在整个表中，这两项同时出现的行数有69行，即69次观测，占比为0.7%。confidence=0.431表明了在herbs出现的情况下，root vegetables出现的频数占比为43.1%，这个值可以理解为概率。lift（提升度）是表明关联关系的统计量，该值大于3的时候我们认为该项关联关系是有价值的。
+
+
+```{r}
+plot(groceryrules, control=list(jitter=2, col = rev(brewer.pal(9, "Greens")[4:9])), shading = "lift") 
+```
+
+
+如上图，在规定了最小支持度(support)和置信度(confidence)的情况下，我们总共可以得到463条规则。所有规则的支持度、置信度和提升度都能通过上图反映出来。比如，我们可以得到的信息包括且不限于。
+
+
+>1. 提升度的最大值为3，且在3-4之间的规则是比较多的。
+
+
+>2. 支持度普遍较小，最高的支持度略高于7% 。
+
+
+>3. 置信度分布较均匀，最高置信度能达到60%以上。
+
+
+## 规则可视化
+```{r, fig.width=7, fig.height=7, results='hide'}
+# 避免图过于繁杂，我们提升规则的阈值。
+second.rules <- apriori(groceries, parameter = list(support = 0.025, confidence = 0.06))
+
+plot(second.rules, method="grouped",control=list(col = rev(brewer.pal(9, "Greens")[4:9])))
+```
+
+
+上轴LHS表示规则的因，右轴RHS表示规则的果。气泡的大小表示支持度的相对大小，颜色代表提升度的相对大小。
+
+
+```{r, results='hide', warning=F}
+# 取支持度与置信度都较高的规则。
+top.vegie.rules <- apriori(groceries, parameter = list(support = 0.01, confidence = 0.55, minlen = 2))
+# 网络可视化。
+plot(top.vegie.rules, measure="confidence", method="graph", control=list(type="items"), shading = "lift")
+```
+
+
+通过网络图的方式传达关联规则的信息，箭头的指向反映规则的因果关系。圆圈大小反映置信度，深浅表示提升度。
+
+
+## 总结
+>要理解关联规则模型，需要理解三个指标，支持度：support，置信度：confidence，提升度：lift。这三个指标都能从不同角度反映关联关系的深浅，普遍认为提升度是最重要的指标，置信度和支持度其次。
+
+
+>我们所说的关联关系，就是字面意义上的“关联”。比如有三个项目{a,b,c}，如果我们的规则中有一条是{a,b}->{c}，并且该规则的三个指标的值都较大，那么我们应该重视这条规则，它告诉我们，当a和b都出现时，出现c的概率就会比较大。
+
+
+
+
