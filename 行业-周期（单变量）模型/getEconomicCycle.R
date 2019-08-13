@@ -6,7 +6,7 @@ economic <- economic[2:337,]
 rownames(economic) <- 1:nrow(economic)
 
 # 这里选择开始的年份
-Year <- 1997
+Year <- 2002
 ecostar <- (Year-1990)*12+1 # 每年12个月
 ppi <- economic[ecostar:nrow(economic),1:2]
 ppi[,2] <- as.numeric(ppi[,2])
